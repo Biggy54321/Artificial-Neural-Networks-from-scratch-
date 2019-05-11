@@ -40,7 +40,7 @@ class ANN:
         weightedSum = None
         # feed the input x through all the layers one by one
         for i in range(self.numOfLayers):
-            weightedSum = np.add(np.dot(activation, self.weights[i]), self.bias[i])
+            weightedSum = np.add(np.matmul(activation, self.weights[i]), self.bias[i])
             activation = self.activationList[i](weightedSum)
         return activation
 
