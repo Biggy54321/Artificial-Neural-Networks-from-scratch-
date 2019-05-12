@@ -7,7 +7,7 @@ b. matplotlib<br>
 <h2>Description</h2>
 Implemented ANN using basic numpy functionalities. The ANN model consists of following features<br>
 a. Mini-batch Gradient Descent<br>
-b. L2 Regularization<br>
+b. L2 (ann_l2.py) and Dropout (ann_dropout) Regularization<br>
 c. Input normalization<br>
 d. Sigmoid, ReLU, Tanh, Linear activation functions and their derivative to be used while back propagation<br>
 e. Variable dimensions of the network adjustable according to the user<br>
