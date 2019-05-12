@@ -94,9 +94,8 @@ class ANN:
                 for i in range(self.numOfLayers):
                     # add the regularization term for weights
                     dw[i] += (regParameter / batchSize) * self.weights[i]
-                    self.weights[i] -= learnRate * dw[i]
-
                     # nudge the weights and biases
+                    self.weights[i] -= learnRate * dw[i]
                     self.bias[i] -= learnRate * db[i]
                 
         # plot the learning curve
