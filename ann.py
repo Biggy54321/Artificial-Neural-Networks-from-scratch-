@@ -32,7 +32,15 @@ class ANN:
     # define the function for predicting the result given the feature matrix
     def predict(self, x):
         activation = x.copy()
+        
+        #normalize the inputs
+        mu = activation.sum(axis = 0) / float(len(activation))
+        activation = activation - mu
+        sigma_sq = (activation ** 2).sum(axis = 0) / float(len(x))
+        activation = activation * ((sigma_sq + 0.00000001) ** -0.5)
+        
         weightedSum = None
+
         # feed the input x through all the layers one by one
         for i in range(self.numOfLayers):
             weightedSum = np.add(np.matmul(activation, self.weights[i]), self.bias[i])
@@ -40,10 +48,16 @@ class ANN:
         return activation
     
     # define the function for nudging (optimizing) the weights and biases
-    def train(self, x, y, learnRate, epochs, batchSize, regParameter = 0.01):
+    def train(self, x, y, learnRate, epochs, batchSize, regParameter):
         # define a list for storing the cost at given number of iterations
         costList = []
 
+        # normalize the inputs
+        mu = x.sum(axis = 0) / float(len(x))
+        x = x - mu
+        sigma_sq = (x ** 2).sum(axis = 0) / float(len(x))
+        x = x * ((sigma_sq + 0.00000001) ** -0.5)
+        
         # perform the optimization for epochs number of times on the entire dataset
         for e in range(epochs):
             # optimize the weights and biases for every batch
@@ -63,6 +77,7 @@ class ANN:
 
                 # calculate the cost
                 cost = activation[self.numOfLayers] - y[b : b + batchSize]
+
                 # add the cost for the current batch to the list to plot the learning curve later
                 temp_cost = ((cost ** 2) / batchSize).sum()
                 costList.append(temp_cost)
@@ -77,11 +92,13 @@ class ANN:
                     cost = np.matmul(cost, self.weights[i - 1].T)
                     i -= 1
 
-                # nudge the weights and biases
+                # update the weights and biases
                 for i in range(self.numOfLayers):
                     # add the regularization term for weights
                     dw[i] += (regParameter / batchSize) * self.weights[i]
                     self.weights[i] -= learnRate * dw[i]
+
+                    # nudge the weights and biases
                     self.bias[i] -= learnRate * db[i]
                 
         # plot the learning curve
@@ -89,39 +106,46 @@ class ANN:
         plt.scatter(range(1, len(costList) + 1), costList)        
         plt.show()
             
-    # define the activation functions and the derivative functions
+    # define the sigmoid activation function
     @staticmethod
     def sigmoid(x):
         temp = 1.0 / (1.0 + np.exp(-x))
         return temp
 
+    # define the derivative of sigmoid activation function
     @staticmethod
     def sigmoidDash(x):
         temp = (1.0 / (1.0 + np.exp(-x))) * (1.0 - (1.0 / (1.0 + np.exp(-x))))
         return temp
-    
+
+    # define the relu activation function
     @staticmethod
     def relu(x):
         return x * (x > 0)
-    
+
+    # define the derivative of the relu activation function
     @staticmethod
     def reluDash(x):
         return x > 0
-        
+
+    # define the tanh activation function
     @staticmethod
     def tanh(x):
         temp = np.tanh(x)
         return temp
 
+    # define the derivative of the tanh activation function
     @staticmethod
     def tanhDash(x):
         temp = 1.0 - tanh(x) ** 2
         return temp
 
+    # define the linear activation function
     @staticmethod
     def linear(x):
         return x
 
+    # define the derivative of the linear activation function
     @staticmethod
     def linearDash(x):
-        return 1                    
+        return 1
