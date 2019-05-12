@@ -182,3 +182,11 @@ class ANN:
         sigma_sq = (temp ** 2).sum(axis = 0) / float(len(temp))
         temp = temp * ((sigma_sq + 0.00000001) ** -0.5)
         return temp
+   
+    def evaluate(x, y):
+        y_pred = self.predict(x)
+        true_count = 0
+        for i in range(len(y)):
+            if np.argmax(y_pred[i]) == np.argmax(y[i]):
+                true_count += 1
+        print(true_count, "number of correct predictions of", len(y), "input samples")
