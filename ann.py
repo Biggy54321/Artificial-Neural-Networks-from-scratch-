@@ -1,8 +1,6 @@
 # import the required libraries
 import numpy as np
 import matplotlib.pyplot as plt
-import tensorflow
-from keras.datasets import mnist
 
 # define a class for the Artificial Neural Network (Basic Neural Network)
 class ANN:
