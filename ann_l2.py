@@ -83,7 +83,7 @@ class ANN:
             
         return wt_sum, act
 
-    def back_prop(self, delta, wt_sum, act, reg_term, batch_size, cost_func):
+    def back_prop(self, delta, wt_sum, act, reg_term, batch_size):
         """
         Description -
         Finds the derivative of the cost with respect to the weights and biases
@@ -97,9 +97,7 @@ class ANN:
         
         i = self.no_layers
         while i > 0:
-            # dont mutiply the activation prime term in case of cross entropy cost function
-            if cost_func != 'cross_entropy' or i != self.no_layers:
-                delta = delta * self.act_prime_funcs[i - 1](wt_sum[i])
+            delta = delta * self.act_prime_funcs[i - 1](wt_sum[i])
             # find the derivative wrt biases
             db[i - 1] = delta.sum(axis = 0) / batch_size
             # find the derivative wrt weights
@@ -119,7 +117,7 @@ class ANN:
             self.weights[i] -= learn_rate * dw[i]
             self.bias[i] -= learn_rate * db[i]
             
-    def train(self, x, y, learn_rate, epochs, batch_size, reg_term, cost_func = 'mean_square'):
+    def train(self, x, y, learn_rate, epochs, batch_size, reg_term):
         """ 
         Description -
         a. Normalizes the input activations before training
@@ -136,7 +134,6 @@ class ANN:
         e. learn_rate - Factor with which the gradient is to be mulitplied which updating the weights and biases
         f. epochs - Number of passes over the entire dataset
         g. batch_size - Number of examples given at at time to perform gradient descent on
-        h. cost_func - Defines the type of cost function used
         """
         # store the cost at each iteration
         cost_at_itr = []
@@ -161,7 +158,7 @@ class ANN:
                 print("Epoch", e + 1, "|", "Batch", int(b / batch_size), "|", "Cost", cost)
                 
                 # perform backpropagation
-                dw, db = self.back_prop(delta, wt_sum, act, reg_term, batch_size, cost_func)
+                dw, db = self.back_prop(delta, wt_sum, act, reg_term, batch_size)
 
                 # update the weights and biases
                 self.update(dw, db, learn_rate)
