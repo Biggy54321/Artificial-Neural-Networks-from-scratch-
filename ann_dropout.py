@@ -239,7 +239,7 @@ class ANN:
         y_pred - Stores the output layer activations got from the neural network
         true_count - Stores the correctly predicted samples count
         """
-        y_pred = self.feed_prop(x)
+        y_pred = self.forward_prop(x)
         true_count = 0
         for i in range(len(y)):
             if np.argmax(y_pred[i]) == np.argmax(y[i]):
